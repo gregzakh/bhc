@@ -12,14 +12,15 @@ function Show-DBeaverPass {
   [CmdletBinding()]
   param(
     [Parameter(HelpMessage='The file where DBeaver keeps credentials')]
-    [ValidateNotNullOrEmpty()]
     [String]$Credentials
   )
 
   begin {
-    [String[]]$chunks = 'DBeaverData', 'workspace6', 'General', '.dbeaver', 'credentials-config.json'
-    $chunks = ,($IsWindows ? $env:appdata : "$env:HOME/.local/share") + $chunks
-    $Credentials = [IO.Path]::Combine($chunks)
+    if ([String]::IsNullOrEmpty($Credentials)) {
+      [String[]]$chunks = 'DBeaverData', 'workspace6', 'General', '.dbeaver', 'credentials-config.json'
+      $chunks = ,($IsWindows ? $env:appdata : "$env:HOME/.local/share") + $chunks
+      $Credentials = [IO.Path]::Combine($chunks)
+    }
     
     if (!(Test-Path $Credentials)) {
       throw [IO.FileNotFoundException]::new("$Credentials not been found or missed")
