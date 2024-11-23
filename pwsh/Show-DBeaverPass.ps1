@@ -12,20 +12,19 @@ function Show-DBeaverPass {
         The file where DBeaver keeps credentials.
     .EXAMPLE
         Show-DBeaverPass
-    .NOTES
-        If you are on Linux, you can decode DBeaver credentials using OpenSSL as follows:
-        openssl aes-128-cbc -d -K babb4a9f774ab853c96c2d653dfe544a -iv 00000000000000000000000000000000 \
-                     -in ~/.local/share/DBeaverData/workspace6/General/.dbeaver/credentials-config.json |
-                     cut -c 15- | yq -p=json
   #>
   [CmdletBinding()]
   param(
     [Parameter(HelpMessage='The file where DBeaver keeps credentials')]
     [ValidateNotNullOrEmpty()]
-    [String]$Credentials = "$env:appdata\dbeaverdata\workspace6\general\.dbeaver\credentials-config.json"
+    [String]$Credentials
   )
 
   begin {
+    [String[]]$chunks = 'DBeaverData', 'workspace6', 'General', '.dbeaver', 'credentials-config.json'
+    $chunks = ,($IsWindows ? $env:appdata : "$env:HOME/.local/share") + $chunks
+    $Credentials = [IO.Path]::Combine($chunks)
+    
     if (!(Test-Path $Credentials)) {
       throw [IO.FileNotFoundException]::new("$Credentials not been found or missed")
     }
