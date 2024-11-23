@@ -4,10 +4,6 @@ function Show-DBeaverPass {
   <#
     .SYNOPSIS
         Retrieves forgottent passwords from DBeaver credential store.
-    .DESCRIPTION
-        This script (function) is generally aimed at the Windows version of DBeaver, but it can be easily
-        adapted for Linux, for example, by replacing $Credentials path with
-                           ~/.local/share/DBeaverData/workspace6/General/.dbeaver/credentials-config.json
     .Parameter Credentials
         The file where DBeaver keeps credentials.
     .EXAMPLE
